@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Alert from '../components/Alert'
 import axiosClient from '../config/axiosClient'
@@ -13,7 +13,13 @@ const Login = () => {
   const [alert, setAlert] = useState({})
   
   //Hook Context API
-  const { setAuth } = useAuth()
+  const { auth, setAuth } = useAuth()
+
+  useEffect(() => {
+    if(auth?._id) {
+      navigate('/projects')
+    }
+  }, [])
 
   const handleSubmit = async e => {
     e.preventDefault()

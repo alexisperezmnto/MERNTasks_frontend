@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import axiosClient from '../config/axiosClient'
 
 import Alert from '../components/Alert'
+import useAuth from '../hooks/useAuth'
 
 const ConfirmAccount = () => {
+
+  const navigate = useNavigate()
 
   const [alert, setAlert] = useState({})
   const [confirmedAccount, setConfirmedAccount] = useState(false)
@@ -12,24 +15,35 @@ const ConfirmAccount = () => {
   const params = useParams()
   const { id } = params
 
+  const { auth } = useAuth()
+
+  useEffect(() => {
+    
+  }, [])
+
   useEffect(() => {
     const confirmAccount = async () => {
-      try {
-        const url = `/users/confirm/${id}`
-        const { data } = await axiosClient(url)
-        
-        setAlert({
-          msg: data.msg,
-          error: false
-        })
 
-        setConfirmedAccount(true)
+      if(auth?._id) {
+        navigate('/projects')
+      } else {
+        try {
+          const url = `/users/confirm/${id}`
+          const { data } = await axiosClient(url)
+          
+          setAlert({
+            msg: data.msg,
+            error: false
+          })
 
-      } catch (error) {
-        setAlert({
-          msg: error.response.data.msg,
-          error: true
-        })
+          setConfirmedAccount(true)
+
+        } catch (error) {
+          setAlert({
+            msg: error.response.data.msg,
+            error: true
+          })
+        }
       }
     }
 

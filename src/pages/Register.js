@@ -1,16 +1,27 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import useAuth from '../hooks/useAuth'
 import axiosClient from '../config/axiosClient'
 
 import Alert from '../components/Alert'
 
 const Register = () => {
 
+  const navigate = useNavigate()
+
   const [ name, setName ] = useState('')
   const [ email, setEmail ] = useState('')
   const [ password, setPassword ] = useState('')
   const [ confirmPassword, setConfirmPassword ] = useState('')
   const [ alert, setAlert ] = useState({})
+
+  const { auth } = useAuth()
+
+  useEffect(() => {
+    if(auth?._id) {
+      navigate('/projects')
+    }
+  }, [])
 
   const handleSubmit = async e => {
     e.preventDefault()
